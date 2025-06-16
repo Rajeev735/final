@@ -160,6 +160,7 @@ export const addproducts = async (req, res) => {
     const savedProduct = await newProduct.save();
 
     return res.status(201).json({
+      success:true,
       message: 'Product added successfully!',
       product: savedProduct,
     });
@@ -174,14 +175,16 @@ export const addproducts = async (req, res) => {
 
 export const getSellerProfile = async (req, res) => {
   try {
-    const {sellerid } = req.body;
+    console.log("p")
+    const {sellerId } = req.body;
     
-    let seller = await sellermodel.findById(sellerid);
+    let seller = await sellermodel.findById(sellerId);
 
     if (seller) {
       
-    
+        console.log("s",seller)
       return res.status(200).json({success:true , seller });
+  
     } 
   } catch (e) {
     console.error(e);
@@ -190,11 +193,11 @@ export const getSellerProfile = async (req, res) => {
 };
 export const updateSellerProfile = async (req, res) => {
   try {
-    const { sellerid, name, email, phone } = req.body;
+    const { sellerId, name, email, phone } = req.body;
 
     // Find the seller by ID
-    console.log(sellerid);
-    let seller = await sellermodel.findById(sellerid);
+    
+    let seller = await sellermodel.findById(sellerId);
 
     if (!seller) {
       return res.status(404).json({ success: false, message: "Seller not found" });

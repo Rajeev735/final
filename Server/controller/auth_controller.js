@@ -419,8 +419,9 @@ cart.items.push({
           name: item.productId.name,
           image: item.productId.image,
           price: item.productId.price,
+           
         },
-        sellerId: item.sellerId,
+       sellerId: item.sellerId,
         quantity: item.quantity,
       }));
 

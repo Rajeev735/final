@@ -6,7 +6,8 @@ import { Button, FormControl, InputLabel } from '@mui/material';
 import { MdOutlineCloudUpload } from 'react-icons/md';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
-import AddCategory from '../Category/AddCategory'; // Update path if needed
+import AddCategory from '../Category/AddCategory';
+import AddSubCategory from '../Category/AddSubCategory';
 import { Autocomplete, TextField } from '@mui/material';
 
 function AddProduct() {
@@ -14,6 +15,7 @@ function AddProduct() {
   const [subcategories, setSubcategories] = useState([]);
   const [images, setImages] = useState([]);
   const [openAddCategoryModal, setOpenAddCategoryModal] = useState(false);
+  const [openAddSubCategoryModal, setOpenAddSubCategoryModal] = useState(false);
   const stoken = localStorage.getItem('stoken') || "null";
 
   const [Product, setProduct] = useState({
@@ -122,6 +124,12 @@ function AddProduct() {
     fetchCategories();
   };
 
+  const handleOpenSubCategoryModal = () => setOpenAddSubCategoryModal(true);
+  const handleCloseSubCategoryModal = () => {
+    setOpenAddSubCategoryModal(false);
+    fetchSubcategories();
+  };
+
   return (
     <section className="p-4 md:p-6 lg:p-10 bg-gray-50">
       <form className="mx-auto w-full md:w-[90%] lg:w-[70%]">
@@ -147,18 +155,18 @@ function AddProduct() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
-        <Autocomplete
-  fullWidth
-  options={categories}
-  getOptionLabel={(option) => option.categoryname}
-  value={categories.find(cat => cat._id === Product.categoryname) || null}
-  onChange={(event, newValue) => {
-    setProduct({ ...Product, categoryname: newValue ? newValue._id : '' });
-  }}
-  renderInput={(params) => (
-    <TextField {...params} label="Category" variant="outlined" />
-  )}
-/>
+          <Autocomplete
+            fullWidth
+            options={categories}
+            getOptionLabel={(option) => option.categoryname}
+            value={categories.find(cat => cat._id === Product.categoryname) || null}
+            onChange={(event, newValue) => {
+              setProduct({ ...Product, categoryname: newValue ? newValue._id : '' });
+            }}
+            renderInput={(params) => (
+              <TextField {...params} label="Category" variant="outlined" />
+            )}
+          />
 
           <FormControl fullWidth>
             <InputLabel>Subcategory</InputLabel>
@@ -170,6 +178,12 @@ function AddProduct() {
               ))}
             </Select>
           </FormControl>
+
+          <div className="mt-2">
+            <Button variant="outlined" onClick={handleOpenSubCategoryModal}>
+              + Create New Subcategory
+            </Button>
+          </div>
         </div>
 
         <div className="mb-6">
@@ -290,7 +304,6 @@ function AddProduct() {
         </div>
       </form>
 
-      {/* Modal for Adding Category */}
       <Modal
         open={openAddCategoryModal}
         onClose={handleCloseCategoryModal}
@@ -298,6 +311,16 @@ function AddProduct() {
       >
         <Box className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-5 rounded shadow-lg w-[90%] sm:w-[500px]">
           <AddCategory onSuccess={handleCloseCategoryModal} />
+        </Box>
+      </Modal>
+
+      <Modal
+        open={openAddSubCategoryModal}
+        onClose={handleCloseSubCategoryModal}
+        aria-labelledby="add-subcategory-modal"
+      >
+        <Box className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-5 rounded shadow-lg w-[90%] sm:w-[500px]">
+          <AddSubCategory onSubCategoryAdded={handleCloseSubCategoryModal} />
         </Box>
       </Modal>
     </section>
