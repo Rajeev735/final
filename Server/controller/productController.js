@@ -1,12 +1,15 @@
 import addproductmodel from "../model/addproduct.js";
-
+import mongoose from "mongoose";
 export const addProduct = async (req, res) => {
   try {
+
     const {
       title, description, categoryname, subcategory, price,
       oldprice, discount, ingredients, brand, size,
-      additional_details, images,
+      additional_details, images
     } = req.body;
+    
+    
 
     if (!title || !price) {
       return res.status(400).json({ success: false, message: "Please provide all the details" });
@@ -27,10 +30,16 @@ export const addProduct = async (req, res) => {
 
 export const getAllProducts = async (req, res) => {
   try {
-    const products = await addproductmodel.find();
-    res.status(200).json({ success: true, data: products });
+    const {sellerId}=req.body;
+    
+    const products = await addproductmodel.find({ sellerId });
+    console.log("p",products)
+    if(!products){
+      return res.status(404).json("no product found")
+    }
+   return  res.status(200).json({ success: true, data: products });
   } catch (error) {
-    res.status(500).json({ success: false, message: "Server error", error: error.message });
+   return res.status(500).json({ success: false, message: "Server error", error: error.message });
   }
 };
 

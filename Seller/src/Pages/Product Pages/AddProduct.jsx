@@ -16,6 +16,7 @@ function AddProduct() {
   const [images, setImages] = useState([]);
   const [openAddCategoryModal, setOpenAddCategoryModal] = useState(false);
   const [openAddSubCategoryModal, setOpenAddSubCategoryModal] = useState(false);
+  const [approved,setApproved]=useState(false);
   const stoken = localStorage.getItem('stoken') || "null";
 
   const [Product, setProduct] = useState({
@@ -129,7 +130,26 @@ function AddProduct() {
     setOpenAddSubCategoryModal(false);
     fetchSubcategories();
   };
+  useEffect(()=>{
+    fetchSeller();
 
+  },[])
+
+  
+const fetchSeller=async(req,res)=>{
+     res=await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/seller/sellerdetails`,{headers:{stoken}})
+    if(res.data.success){
+    
+      setApproved(res.data.seller[0].approved)
+    }
+  }
+if (!approved) {
+  return (
+    <div className="min-h-[50vh] flex items-center justify-center text-center text-xl font-semibold text-red-600">
+      You are not approved to add products. Please contact the administrator.
+    </div>
+  );
+}
   return (
     <section className="p-4 md:p-6 lg:p-10 bg-gray-50">
       <form className="mx-auto w-full md:w-[90%] lg:w-[70%]">

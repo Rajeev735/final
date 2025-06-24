@@ -18,10 +18,11 @@ function ProductList() {
   const [updatetask, setUpdatetask] = useState({});
   const [categories, setCategories] = useState([]);
   const [subcategories, setSubcategories] = useState([]);
-
+  const stoken=localStorage.getItem("stoken") || "";
   const fetchProducts = async () => {
     try {
-      const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/product/getproducts`);
+      const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/product/getproducts`,{headers:{stoken}});
+      console.log(response)
       setProducts(response.data.data);
       setLoading(false);
     } catch (error) {
@@ -52,6 +53,7 @@ function ProductList() {
     fetchProducts();
     fetchCategories();
     fetchSubcategories();
+    console.log(products)
   }, []);
 
   const removeproduct = async (_id) => {
@@ -135,7 +137,7 @@ function ProductList() {
               <th className="px-6 py-4 whitespace-nowrap">Category</th>
               <th className="px-6 py-4 whitespace-nowrap">Sub Category</th>
               <th className="px-6 py-4 whitespace-nowrap">Price</th>
-              <th className="px-6 py-4 whitespace-nowrap">Action</th>
+            
             </tr>
           </thead>
           <tbody>
@@ -211,28 +213,7 @@ function ProductList() {
                       </span>
                     </div>
                   </td>
-                  <td className="px-6 py-2 border">
-                    <div className="flex items-center justify-center gap-2">
-                      <Tooltip title="Update">
-                        <button className="text-blue-600 text-lg" onClick={() => update(product._id)}>
-                          <MdOutlineEdit />
-                        </button>
-                      </Tooltip>
-                      <Tooltip title="Delete">
-                        <button
-                          className="text-red-600 text-lg"
-                          onClick={() => removeproduct(product._id)}
-                        >
-                          <LuTrash2 />
-                        </button>
-                      </Tooltip>
-                      <Tooltip title="Preview">
-                        <button className="text-green-600 text-lg">
-                          <FaRegEye />
-                        </button>
-                      </Tooltip>
-                    </div>
-                  </td>
+               
                 </tr>
               ))
             )}

@@ -4,6 +4,7 @@ import { Button } from "@mui/material";
 import axios from "axios";
 
 function AddCategory({ onClose }) {
+   const [approved,setApproved]=useState(false);
   const [category, setCategory] = useState({
     categoryname: "",
     image: null,
@@ -55,7 +56,24 @@ function AddCategory({ onClose }) {
       alert(error.response?.data?.message || "Failed to add category");
     }
   };
+  useEffect(()=>{
+    fetchSeller();
 
+  },[])
+  const fetchSeller=async(req,res)=>{
+       res=await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/seller/sellerdetails`,{headers:{stoken}})
+      if(res.data.success){
+      
+        setApproved(res.data.seller[0].approved)
+      }
+    }
+if (!approved) {
+  return (
+    <div className="min-h-[50vh] flex items-center justify-center text-center text-xl font-semibold text-red-600">
+      You are not approved to add categories. Please contact the administrator.
+    </div>
+  );
+}
   return (
     <section className="p-4 bg-white">
       <form className="w-full" onSubmit={addCategory}>

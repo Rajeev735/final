@@ -8,7 +8,7 @@ function AddSubCategory({ onSubCategoryAdded, className = "" }) {
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
   const [loading, setLoading] = useState(false);
-
+ const [approved,setApproved]=useState(false);
   useEffect(() => {
     axios
       .get(`${import.meta.env.VITE_BACKEND_URL}/api/getcategories`)
@@ -51,7 +51,24 @@ function AddSubCategory({ onSubCategoryAdded, className = "" }) {
       setLoading(false);
     }
   };
+  const fetchSeller=async(req,res)=>{
+     res=await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/seller/sellerdetails`,{headers:{stoken}})
+    if(res.data.success){
+    
+      setApproved(res.data.seller[0].approved)
+    }
+  }
+  useEffect(()=>{
+    fetchSeller();
 
+  },[])
+if (!approved) {
+  return (
+    <div className="min-h-[50vh] flex items-center justify-center text-center text-xl font-semibold text-red-600">
+      You are not approved to add sub-categories. Please contact the administrator.
+    </div>
+  );
+}
   return (
     <section className={`p-4 bg-gray-50 ${className}`}>
       <form onSubmit={handleSubmit} className="py-4 px-4 sm:px-10">

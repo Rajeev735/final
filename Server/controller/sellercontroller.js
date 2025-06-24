@@ -26,9 +26,9 @@ export const userlist=async(req,res)=>{
 
 export const registerseller=async(req,res)=>{
 try{
-  const {name,email,password}=req.body
+  const {name,email,password,nickName}=req.body
 
-  if(!name || !password || !email){
+  if(!name || !password || !email || !nickName){
   return res.json({success:false,message:"Missing Details"})
   }
   
@@ -48,7 +48,8 @@ try{
   
   const sellerdata={
     name,email,
-    password:hashedpass
+    password:hashedpass,
+    nickName
   }
   
   const newseller=new sellermodel(sellerdata)
@@ -86,7 +87,8 @@ export const loginseller = async (req, res) => {
         user: {
           name: seller.name, // ✅ Send name here
           email: seller.email, // optional if you want
-          id: seller._id      // optional if needed
+          id: seller._id,
+          nickName:seller.nickName      // optional if needed
         }
       });
     } else {
@@ -259,3 +261,17 @@ export const getSellerOrders = async (req, res) => {
 };
 
 
+export const getSeller=async(req,res)=>{
+
+  const {sellerId}=req.body
+console.log("i",sellerId)
+  const seller=await sellermodel.find({ _id: sellerId})
+
+  if(!seller.length){
+    return res.status(404).json({message:"seller not found"})
+
+  }
+
+  return res.status(200).json({success:true,seller});
+
+}

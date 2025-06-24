@@ -10,6 +10,7 @@ function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
+  const [nickName, setNickName] = useState('');
   const { backendurl, setatoken } = useContext(Admincontext);
   const navigate = useNavigate();
 
@@ -23,6 +24,7 @@ function Login() {
             name,
             email,
             password,
+            nickName
           });
 
           if (data.success) {
@@ -44,6 +46,7 @@ function Login() {
           if (data.success) {
             localStorage.setItem('stoken', data.token);
             localStorage.setItem('name', data.user.name);
+            localStorage.setItem('nick name', data.user.nickName);
             setatoken(data.token);
             toast.success('Login successfully');
             navigate('/');
@@ -84,7 +87,23 @@ function Login() {
               value={name}
               onChange={(e) => setName(e.target.value)}
             />
+             <div className="mb-4 mt-4">
+            <label className="block mb-1 font-medium" htmlFor="name">
+              Nick Name(The name by which we call you)
+            </label>
+            <input
+              id="nick name"
+              className="border border-[#dadada] rounded w-full p-2 focus:outline-none focus:ring-2 focus:ring-[#5f6fff]"
+              type="text"
+              required
+              placeholder="Enter what we call you"
+              value={nickName}
+              onChange={(e) => setNickName(e.target.value)}
+            />
           </div>
+          </div>
+       
+          
         )}
 
         <div className="mb-4">

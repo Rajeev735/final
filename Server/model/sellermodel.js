@@ -5,12 +5,13 @@ const sellerschema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String,required:true },
   image: { type: String},
-
+  nickName:{type:String},
   about: { type: String},
-  available: { type: Boolean },
+
   phone:{type:Number},
   address: { type: Object },
   date: { type: Date, default: Date.now }, 
+  approved:{type:Boolean,default:false}
  
 }, { minimize: false });
 

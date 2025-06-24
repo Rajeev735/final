@@ -14,6 +14,8 @@ function Header() {
   const { atoken, setatoken } = useContext(Admincontext);
   const navigate = useNavigate();
   const name = localStorage.getItem("name") || "";
+   const nickName = localStorage.getItem("nick name") || "";
+   const displayName=nickName || name ;
 
   const handleClick = (event) => {
     if (atoken) setAnchorEl(event.currentTarget);
@@ -26,6 +28,7 @@ function Header() {
   const handleLogout = () => {
     localStorage.removeItem("atoken");
     localStorage.removeItem("name");
+     localStorage.removeItem("nick name");
     setatoken("");
     navigate("/login");
   };
@@ -43,14 +46,15 @@ function Header() {
 
         {/* Account Section */}
         {atoken && (
-          <div className="w-[10%]  flex justify-end">
+          <div className="w-[10%]   flex justify-end ">
             <button
               onClick={handleClick}
               className="bg-[#5f6fff] text-white font-semibold rounded-full w-10 h-10 flex items-center justify-center text-[18px]"
               title="Account"
             >
-              {name[0]?.toUpperCase()}
+              {displayName[0]?.toUpperCase()}
             </button>
+          
           </div>
         )}
 
@@ -89,10 +93,10 @@ function Header() {
           <MenuItem>
             <div className="flex items-center gap-2">
               <div className="w-[38px] h-[38px] rounded-full bg-[#5f6fff] text-white flex items-center justify-center text-lg font-semibold">
-                {name[0]?.toUpperCase()}
+                {displayName[0]?.toUpperCase()}
               </div>
               <div>
-                <h3 className="text-[16px] font-medium leading-5">{name}</h3>
+                <h3 className="text-[16px] font-medium leading-5">hi! {displayName}</h3>
               </div>
             </div>
           </MenuItem>

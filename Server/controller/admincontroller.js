@@ -1,6 +1,8 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs'
 import Admin from '../model/adminModel.js'
+import orderModel from '../model/order.js';
+import sellermodel from '../model/sellermodel.js';
 
 export const registerAdmin = async (req, res) => {
   try {
@@ -45,3 +47,71 @@ export const loginAdmin = async (req, res) => {
 };
 
 
+export const getAllOrders = async (req, res) => {
+
+
+  try {
+    const orders = await orderModel.find({ 
+     
+    })
+    .populate("user", "name email")
+    .populate("items.productId", "title price brand")
+     .populate("items.sellerId", "name email")
+    .sort({ placedAt: -1 });
+
+    if (!orders.length) {
+      return res.status(404).json({ message: "No orders found" });
+    }
+
+    
+ 
+    
+    return res.status(200).json({success:true,orders});
+
+  } catch (error) {
+    console.error("Error fetching seller orders:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+
+};
+
+export const getAllSellers=async(req,res)=>{
+
+  const sellers=await sellermodel.find({})
+
+  if(!sellers.length){
+     return res.status(404).json({ message: "No sellers found" });
+  }
+
+    return res.status(200).json({ success:true,sellers});
+
+}
+
+export const toggleApprove = async (req, res) => {
+  try {
+    const { sellerId } = req.params;
+
+
+    
+    const seller = await sellermodel.findById(sellerId);
+    if (!seller) {
+      return res.status(404).json({ message: "Seller not found" });
+    }
+
+    const updatedSeller = await sellermodel.findByIdAndUpdate(
+      sellerId,
+      { approved: !seller.approved },
+      { new: true } 
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: `Seller ${updatedSeller.approved ? "approved" : "disapproved"} successfully.`,
+      seller: updatedSeller,
+    });
+
+  } catch (error) {
+    console.error("Error toggling seller approval:", error);
+    res.status(500).json({ success: false, message: "Server error", error: error.message });
+  }
+};

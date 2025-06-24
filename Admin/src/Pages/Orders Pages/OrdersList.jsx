@@ -6,7 +6,6 @@ import axios from "axios";
 function OrdersList() {
   const [isOpenOrderdProduct, setOpenOrderdProduct] = useState(null);
   const [orders, setOrders] = useState([]);
-  const stoken = localStorage.getItem("stoken");
 
   const toggleOrderDetails = (index) => {
     setOpenOrderdProduct(isOpenOrderdProduct === index ? null : index);
@@ -15,13 +14,11 @@ function OrdersList() {
   const getOrders = async () => {
     try {
       const { data } = await axios.get(
-        `${import.meta.env.VITE_BACKEND_URL}/api/seller/orders`,
-        {
-          headers: { stoken },
-        }
+        `${import.meta.env.VITE_BACKEND_URL}/api/admin/orders`
       );
       if (data.success) {
         setOrders(data.orders);
+        console.log("d",data)
       }
     } catch (error) {
       console.error("Error fetching orders:", error);
@@ -30,7 +27,8 @@ function OrdersList() {
 
   useEffect(() => {
     getOrders();
-  }, []);
+    
+  },[]);
 
   return (
     <div className="orders my-3 shadow-md rounded-md py-4 px-4 bg-white max-w-full">
@@ -38,7 +36,6 @@ function OrdersList() {
         <h2 className="text-[18px] font-semibold">Recent Orders</h2>
       </div>
 
-      {/* Outer scroll container for the table */}
       <div className="relative mt-5 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 max-w-full">
         <table className="w-full min-w-[900px] text-sm text-gray-500 border-collapse">
           <thead className="text-xs uppercase text-[12px] bg-gray-100 text-[rgba(0,0,0,0.8)]">
@@ -84,7 +81,9 @@ function OrdersList() {
                   </td>
                   <td className="px-4 py-3">{order.shippingAddress?.pin}</td>
                   <td className="px-4 py-3">₹{order.totalAmount}</td>
-                  <td className="px-4 py-3 break-words max-w-[120px]">{order.user}</td>
+                  <td className="px-4 py-3 break-words max-w-[120px]">
+                    {order.user?._id}
+                  </td>
                   <td className="px-4 py-3 break-words max-w-[130px]">
                     {order.paymentId || "-"}
                   </td>
@@ -99,9 +98,8 @@ function OrdersList() {
                 {isOpenOrderdProduct === index && (
                   <tr>
                     <td colSpan="11" className="py-2 px-3 bg-gray-50">
-                      {/* Inner scroll container for the product details table */}
                       <div className="w-full max-w-[90vw] overflow-x-auto mx-auto mb-3 rounded-md border border-gray-200">
-                        <table className="w-full min-w-[600px] text-sm text-gray-500 shadow-md border-collapse">
+                        <table className="w-full min-w-[700px] text-sm text-gray-500 shadow-md border-collapse">
                           <thead className="bg-gray-100 text-[12px] uppercase text-[rgba(0,0,0,0.8)]">
                             <tr>
                               <th className="px-4 py-3 min-w-[90px]">Product ID</th>
@@ -110,6 +108,7 @@ function OrdersList() {
                               <th className="px-4 py-3 min-w-[80px]">Price</th>
                               <th className="px-4 py-3 min-w-[70px]">Quantity</th>
                               <th className="px-4 py-3 min-w-[100px]">Subtotal</th>
+                              <th className="px-4 py-3 min-w-[140px]">Seller</th>
                             </tr>
                           </thead>
                           <tbody>
@@ -123,9 +122,9 @@ function OrdersList() {
                                     {item.productId?._id || item.productId}
                                   </td>
                                   <td className="px-4 py-3">
-                                    {item.productId?.images?.[0]?.url ? (
+                                    {order?.image? (
                                       <img
-                                        src={item.productId.images[0].url}
+                                        src={order?.image}
                                         alt="Product"
                                         className="w-12 h-12 object-cover mx-auto rounded-md"
                                       />
@@ -139,19 +138,28 @@ function OrdersList() {
                                   >
                                     {item.productId?.title || "-"}
                                   </td>
-                                  <td className="px-4 py-3 whitespace-nowrap">₹{item.price}</td>
-                                  <td className="px-4 py-3 whitespace-nowrap">{item.quantity}</td>
+                                  <td className="px-4 py-3 whitespace-nowrap">
+                                    ₹{item.price}
+                                  </td>
+                                  <td className="px-4 py-3 whitespace-nowrap">
+                                    {item.quantity}
+                                  </td>
                                   <td className="px-4 py-3 whitespace-nowrap">
                                     ₹{(item.price * item.quantity).toFixed(2)}
+                                  </td>
+                                  <td className="px-4 py-3 text-left">
+                                    <div>
+                                      <strong>{item.sellerId?.name || "-"}</strong>
+                                      <div className="text-xs text-gray-400">
+                                        {item.sellerId?.email || ""}
+                                      </div>
+                                    </div>
                                   </td>
                                 </tr>
                               ))
                             ) : (
                               <tr>
-                                <td
-                                  colSpan="6"
-                                  className="text-center py-4 text-gray-500"
-                                >
+                                <td colSpan="7" className="text-center py-4 text-gray-500">
                                   No items in this order.
                                 </td>
                               </tr>
