@@ -9,6 +9,7 @@ function AddSubCategory({ onSubCategoryAdded, className = "" }) {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [loading, setLoading] = useState(false);
  const [approved,setApproved]=useState(false);
+  const stoken = localStorage.getItem('stoken') || "null";
   useEffect(() => {
     axios
       .get(`${import.meta.env.VITE_BACKEND_URL}/api/getcategories`)

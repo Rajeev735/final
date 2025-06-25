@@ -30,8 +30,9 @@ function ProductList() {
 
   const fetchProducts = async () => {
     try {
-      const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/product/getproducts`);
-      setProducts(response.data.data);
+      const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/admin/products`);
+      setProducts(response.data.products);
+      console.log(response.data.products)
       setLoading(false);
     } catch (error) {
       console.error("Error fetching products:", error);

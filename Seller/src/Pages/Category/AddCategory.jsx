@@ -2,8 +2,10 @@ import React, { useState } from "react";
 import { MdOutlineCloudUpload } from "react-icons/md";
 import { Button } from "@mui/material";
 import axios from "axios";
+import { useEffect } from "react";
 
 function AddCategory({ onClose }) {
+   const stoken = localStorage.getItem('stoken') || "null";
    const [approved,setApproved]=useState(false);
   const [category, setCategory] = useState({
     categoryname: "",
@@ -58,12 +60,12 @@ function AddCategory({ onClose }) {
   };
   useEffect(()=>{
     fetchSeller();
-
+    console.log(approved)
   },[])
-  const fetchSeller=async(req,res)=>{
-       res=await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/seller/sellerdetails`,{headers:{stoken}})
+  const fetchSeller=async()=>{
+       const res=await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/seller/sellerdetails`,{headers:{stoken}})
       if(res.data.success){
-      
+        
         setApproved(res.data.seller[0].approved)
       }
     }

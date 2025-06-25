@@ -3,6 +3,7 @@ import bcrypt from 'bcryptjs'
 import Admin from '../model/adminModel.js'
 import orderModel from '../model/order.js';
 import sellermodel from '../model/sellermodel.js';
+import addproductmodel from '../model/addproduct.js';
 
 export const registerAdmin = async (req, res) => {
   try {
@@ -115,3 +116,18 @@ export const toggleApprove = async (req, res) => {
     res.status(500).json({ success: false, message: "Server error", error: error.message });
   }
 };
+
+
+export const getAllProducts=async(req,res)=>{
+
+   const products=await addproductmodel.find({})
+
+   if(!products){
+    return res.status(404).json({success:false,message:"no prucducts found"})
+   }
+
+
+   return res.status(200).json({success:true,products})
+
+
+}
