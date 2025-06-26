@@ -39,19 +39,19 @@ const addproductSchema = new mongoose.Schema({
     
     ingredients:{
         type:String,
-        required:true,
+        
     },
     brand:{
         type:String,
-        required:true,
+        
     },
     size:{
         type:String,
-        required:true,
+        
     },
     additional_details:{
         type:String,
-        required:true,
+        
     },
     images: [
         {

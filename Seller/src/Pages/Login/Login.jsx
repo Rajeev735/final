@@ -89,7 +89,7 @@ function Login() {
             />
              <div className="mb-4 mt-4">
             <label className="block mb-1 font-medium" htmlFor="name">
-              Nick Name(The name by which we call you)
+             Seller Brand Name
             </label>
             <input
               id="nick name"
